@@ -6,15 +6,15 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 
 @Module({
-  // imports: [
-  //   ...(import.meta.env.PROD
-  //     ? [
-  //         ServeStaticModule.forRoot({
-  //           rootPath: join('..', '/client'),
-  //           exclude: ['/api/(.*)'],
-  //         })
-  //       ] : [])
-  // ],
+  imports: [
+    ...(import.meta.env.PROD
+      ? [
+          ServeStaticModule.forRoot({
+            rootPath: join(process.cwd(), 'dist', '/client'),
+            exclude: ['/api/(.*)'],
+          })
+        ] : [])
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

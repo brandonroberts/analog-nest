@@ -9,10 +9,11 @@
     "ng": "ng",
     "dev": "ng serve",
     "start": "npm run dev",
-    "build": "vite build",
+    "build": "vite build && npm run build:server",
     "build:server": "vite build -c vite.config.server.ts",
     "watch": "ng build --watch --configuration development",
-    "test": "ng test"
+    "test": "ng test",
+    "server": "node dist/analog/server/main.js"
   },
   "private": true,
   "dependencies": {

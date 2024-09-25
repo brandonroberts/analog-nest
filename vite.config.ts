@@ -9,8 +9,8 @@ import { RollupPluginSwc } from './plugin';
 // https://vitejs.dev/config/
 export default defineConfig(({ }) => ({
   build: {
-    outDir: 'dist/client',
-    target: ['es2020'],
+    outDir: 'dist/analog/public',
+    target: ['es2020']
   },
   resolve: {
     mainFields: ['module'],
