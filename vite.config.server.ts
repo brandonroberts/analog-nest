@@ -7,7 +7,7 @@ import { RollupPluginSwc } from './plugin';
 export default defineConfig(({ }) => ({
   esbuild: false,
   build: {
-    outDir: 'dist/analog/server',
+    outDir: 'dist/server',
     ssr: true,
     rollupOptions: {
       input: 'nest/src/main.ts'

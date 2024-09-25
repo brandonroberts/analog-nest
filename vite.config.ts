@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 
 import { defineConfig } from 'vite';
-import angular from '@analogjs/vite-plugin-angular';
+import analog from '@analogjs/platform';
 
 import { NestHandler } from './adapter';
 import { RollupPluginSwc } from './plugin';
@@ -9,7 +9,7 @@ import { RollupPluginSwc } from './plugin';
 // https://vitejs.dev/config/
 export default defineConfig(({ }) => ({
   build: {
-    outDir: 'dist/analog/public',
+    outDir: 'dist/client',
     target: ['es2020']
   },
   resolve: {
@@ -24,11 +24,16 @@ export default defineConfig(({ }) => ({
       'class-validator',
       'fastify-swagger',
     ],
-  },  
+  },
   plugins: [
-    angular({
-      transformFilter(_code, id) {
-        return !id.includes('/nest/');
+    analog({
+      vite: {
+        transformFilter(_code, id) {
+          return !id.includes('/nest/');
+        },
+      },
+      prerender: {
+        routes: ['/']
       }
     }),
     RollupPluginSwc({
@@ -49,7 +54,7 @@ export default defineConfig(({ }) => ({
     }),
     {
       name: 'api',
-      async configureServer(server) {        
+      async configureServer(server) {
         server.middlewares.use('/api', async(req, res) => {
           const appModule = await server.ssrLoadModule(`nest/src/main.ts`);
           let app = appModule['nestApp'];
