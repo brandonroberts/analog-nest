@@ -4,8 +4,8 @@ import { AppModule } from './app.module';
 
 if (import.meta.env.PROD) {
   async function bootstrap() {
-    const app = await NestFactory.create(AppModule, {});
-    app.setGlobalPrefix('api');
+    const app = await NestFactory.create(AppModule);
+    app.setGlobalPrefix('services');
 
     await app.listen(3000);
   }

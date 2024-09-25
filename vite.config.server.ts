@@ -1,7 +1,7 @@
 /// <reference types="vitest" />
 
 import { defineConfig } from 'vite';
-import { RollupPluginSwc } from './plugin';
+import nest from './vite-plugin-nestjs';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ }) => ({
@@ -10,36 +10,13 @@ export default defineConfig(({ }) => ({
     outDir: 'dist/server',
     ssr: true,
     rollupOptions: {
-      input: 'nest/src/main.ts'
+      input: 'server/src/main.ts'
     },
-  },
-  optimizeDeps: {
-    exclude: [
-      '@swc/core',
-      '@nestjs/microservices',
-      '@nestjs/websockets',
-      'cache-manager',
-      'class-transformer',
-      'class-validator',
-      'fastify-swagger',
-    ],
   },  
   plugins: [
-    RollupPluginSwc({
-      module: {
-        type: 'es6',
-      },
-      jsc: {
-        target: 'es2019',
-        parser: {
-          syntax: 'typescript',
-          decorators: true,
-        },
-        transform: {
-          legacyDecorator: true,
-          decoratorMetadata: true,
-        },
-      },
-    }),
+    nest({
+      srcFilter: `${__dirname}/server`,
+      entryServer: 'server/src/main.ts',
+    })
   ],
 }));

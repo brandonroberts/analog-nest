@@ -13,8 +13,7 @@ import { AppService } from './app.service';
       ? [
           ServeStaticModule.forRoot({
             rootPath: join(process.cwd(), 'dist', 'client'),
-            renderPath: 'bad',
-            exclude: ['/api/(.*)', ''],
+            exclude: ['/services/(.*)', ''],
           })
         ] : [])
   ],
@@ -27,6 +26,10 @@ export class AppModule implements OnModuleInit {
   ) {}
 
   async onModuleInit() {
+    if (!import.meta.env.PROD) {
+      return;
+    }
+
     if (!this.httpAdapterHost) {
       return;
     }
@@ -36,7 +39,9 @@ export class AppModule implements OnModuleInit {
     }
     const app = httpAdapter.getInstance();
     const template = readFileSync(join(process.cwd(), 'dist', 'client', 'index.html'), 'utf-8');
-    const renderer = (await import(join(process.cwd(), 'dist', 'ssr', 'main.server.js')))['default'];
+    
+    const renderer = (await import(/* @vite-ignore */join(process.cwd(), 'dist', 'ssr', 'main.server.js')))['default'];
+
     app.get('**', async(req, res) => {
       const html = await renderer(req.url, template, { req, res });
       res.status(200);

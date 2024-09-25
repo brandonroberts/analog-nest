@@ -11,5 +11,5 @@ import { RouterOutlet } from '@angular/router';
 })
 export class AppComponent {
   http = inject(HttpClient);
-  data = toSignal<any>(this.http.get('/api'))
+  data = toSignal<any>(this.http.get('/services'))
 }
