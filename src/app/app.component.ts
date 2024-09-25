@@ -1,10 +1,15 @@
-import { Component } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   imports: [RouterOutlet],
-  template: `<router-outlet></router-outlet>`,
+  template: `Message: {{ data()?.message }}`,
 })
-export class AppComponent {}
+export class AppComponent {
+  http = inject(HttpClient);
+  data = toSignal<any>(this.http.get('/api'))
+}
