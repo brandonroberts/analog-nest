@@ -1,22 +1,21 @@
 /// <reference types="vitest" />
 
 import { defineConfig } from 'vite';
-import angular from '@analogjs/vite-plugin-angular';
-
-import { NestHandler } from './adapter';
 import { RollupPluginSwc } from './plugin';
 
 // https://vitejs.dev/config/
 export default defineConfig(({ }) => ({
+  esbuild: false,
   build: {
-    outDir: 'dist/client',
-    target: ['es2020'],
-  },
-  resolve: {
-    mainFields: ['module'],
+    outDir: 'dist/server',
+    ssr: 'nest/src/main.ts',
+    rollupOptions: {
+      input: 'nest/src/main.ts'
+    },
   },
   optimizeDeps: {
     exclude: [
+      '@swc/core',
       '@nestjs/microservices',
       '@nestjs/websockets',
       'cache-manager',
@@ -26,11 +25,6 @@ export default defineConfig(({ }) => ({
     ],
   },  
   plugins: [
-    angular({
-      transformFilter(_code, id) {
-        return !id.includes('/nest/');
-      }
-    }),
     RollupPluginSwc({
       module: {
         type: 'es6',
@@ -47,17 +41,5 @@ export default defineConfig(({ }) => ({
         },
       },
     }),
-    {
-      name: 'api',
-      async configureServer(server) {        
-        server.middlewares.use('/api', async(req, res) => {
-          const appModule = await server.ssrLoadModule(`nest/src/main.ts`);
-          let app = appModule['nestApp'];
-          app = await app;
-
-          return await NestHandler({ app, req, res });
-        })
-      }
-    }
   ],
 }));
